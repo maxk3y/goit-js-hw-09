@@ -20,7 +20,7 @@ function startCountdown() {
   function onCheck() {
     const diff = selectedValue - new Date().getTime();
     if (diff < 0) {
-      clearInterval(id);
+      clearInterval(timerId);
       startBtn.disabled = true;
     } else {
       correctTimerValues(convertMs(diff));
