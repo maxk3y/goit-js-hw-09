@@ -5,6 +5,7 @@ import Notiflix from 'notiflix';
 const dateTimePicker = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('[data-start]');
 let selectedValue = 0;
+let nowValue = 0;
 
 const refs = {
   daysRef: document.querySelector('[data-days]'),
