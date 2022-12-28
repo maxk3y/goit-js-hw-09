@@ -4,7 +4,7 @@ import Notiflix from 'notiflix';
 
 const dateTimePicker = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('[data-start]');
-let selectedValue;
+let selectedValue = 0;
 
 refs = {
   daysRef: document.querySelector('[data-days]'),
@@ -13,25 +13,22 @@ refs = {
   secondsRef: document.querySelector('[data-seconds]'),
 };
 
-function convertMs(ms) {
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-
-  const days = Math.floor(ms / day);
-  const hours = Math.floor((ms % day) / hour);
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-
-  return { days, hours, minutes, seconds };
-}
-
-function addLeadingZero(value) {
-  return String(value).padStart(2, 0);
-}
-
 startBtn.disabled = true;
+
+function startCountdown() {
+  let timerId;
+  function onCheck() {
+    const diff = selectedValue - new Date().getTime();
+    if (diff < 0) {
+      clearInterval(id);
+      startBtn.disabled = true;
+    } else {
+      correctTimerValues(convertMs(diff));
+      startBtn.disabled = true;
+    }
+  }
+  timerId = setInterval(onCheck, 1000);
+}
 
 const options = {
   enableTime: true,
@@ -52,7 +49,7 @@ const options = {
   },
 };
 
-function displayValues(timerValues) {
+function correctTimerValues(timerValues) {
   refs.daysRef.textContent = addLeadingZero(timerValues.days);
   refs.hoursRef.textContent = addLeadingZero(timerValues.hours);
   refs.minutesRef.textContent = addLeadingZero(timerValues.minutes);
@@ -61,19 +58,22 @@ function displayValues(timerValues) {
 
 flatpickr(dateTimePicker, options);
 
-function startCountdown() {
-  let id;
-  function onCheck() {
-    const diff = selectedValue - new Date().getTime();
-    if (diff < 0) {
-      clearInterval(id);
-      startBtn.disabled = true;
-    } else {
-      displayValues(convertMs(diff));
-      startBtn.disabled = true;
-    }
-  }
-  id = setInterval(onCheck, 1000);
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+}
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, 0);
 }
 
 startBtn.addEventListener('click', startCountdown);
